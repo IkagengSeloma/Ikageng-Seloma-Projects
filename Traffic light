@@ -1,0 +1,56 @@
+using System;
+using System.Device.Location;
+
+namespace OfflineTrafficLight
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            // Create a GeoCoordinateWatcher to get the user's location
+            var watcher = new GeoCoordinateWatcher();
+            watcher.TryStart(false, TimeSpan.FromMilliseconds(1000)); // Timeout after 1 second
+
+            while (true)
+            {
+                // Check if the watcher status is ready and location is available
+                if (watcher.Status == GeoPositionStatus.Ready && watcher.Position.Location.IsUnknown == false)
+                {
+                    // Get latitude and longitude of user's location
+                    double latitude = watcher.Position.Location.Latitude;
+                    double longitude = watcher.Position.Location.Longitude;
+
+                    // Simulate traffic light based on location
+                    SimulateTrafficLight(latitude, longitude);
+                }
+                else
+                {
+                    // If location is not available, simulate default traffic light behavior
+                    SimulateDefaultTrafficLight();
+                }
+
+                // Sleep for some time before checking location again
+                System.Threading.Thread.Sleep(5000); // Check every 5 seconds
+            }
+        }
+
+        static void SimulateTrafficLight(double latitude, double longitude)
+        {
+            // Simulate traffic light based on location
+            // You can implement your own logic here to determine the behavior of the traffic light
+            Console.WriteLine($"Simulating traffic light at location: {latitude}, {longitude}");
+            // Example: Based on latitude and longitude, determine if the light should be red, yellow, or green
+            // Example logic: if (latitude > 0 && longitude < 0) => Green light
+            //                 else => Red light
+            // You can add more complex logic based on your requirements
+        }
+
+        static void SimulateDefaultTrafficLight()
+        {
+            // Simulate default traffic light behavior
+            Console.WriteLine("Location not available. Simulating default traffic light.");
+            // Example: Default behavior when location is not available
+            // You can implement your own default behavior here
+        }
+    }
+}
